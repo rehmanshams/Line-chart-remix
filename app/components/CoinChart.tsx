@@ -17,17 +17,10 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "./ui/chart";
+import { useEffect, useRef } from "react";
+import useWebSocket from "react-use-websocket";
 
 export const description = "A linear line chart";
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
 
 const chartConfig = {
   desktop: {
@@ -36,6 +29,42 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 export function CoinChart() {
+  const data = useRef();
+  const WS_URL = "wss://wspap.okx.com:8443/ws/v5/public";
+  const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
+    WS_URL,
+    {
+      share: false,
+      shouldReconnect: () => true,
+    }
+  );
+  // Run when the connection state (readyState) changes
+  useEffect(() => {
+    console.log("Connection state changed");
+    console.log(JSON.parse(readyState));
+    if (readyState) {
+      sendJsonMessage({
+        op: "subscribe",
+        args: [
+          {
+            channel: "tickers",
+            instId: "BTC-USD-SWAP",
+          },
+        ],
+      });
+    }
+  }, [readyState]);
+  // Run when a new WebSocket message is received (lastJsonMessage).
+  let chartData;
+  useEffect(() => {
+    let chartData = [
+      {
+        month: 1,
+        desktop: lastJsonMessage?.data && lastJsonMessage?.data[0]?.last,
+      },
+    ];
+    console.log(chartData);
+  }, [lastJsonMessage]);
   return (
     <Card>
       <CardHeader>
