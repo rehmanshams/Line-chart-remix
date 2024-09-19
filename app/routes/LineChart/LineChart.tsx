@@ -10,13 +10,13 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "../../components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "./ui/chart";
+} from "../../components/ui/chart";
 import { useEffect, useRef } from "react";
 import useWebSocket from "react-use-websocket";
 
@@ -28,7 +28,7 @@ const chartConfig = {
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
-export function CoinChart() {
+export function LineChartCom() {
   const data = useRef();
   const WS_URL = "wss://wspap.okx.com:8443/ws/v5/public";
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
