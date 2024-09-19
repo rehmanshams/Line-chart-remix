@@ -270,7 +270,7 @@ export function CSVCom({ tableData }: any) {
                     {tableData &&
                       tableData.length > 0 &&
                       tableData?.data[1]?.slice(0, 5)?.map((header: any) => {
-                        return <TableCell>{header}</TableCell>;
+                        return <TableCell key={header.id}>{header}</TableCell>;
                       })}
                     <SheetTrigger asChild>
                       <Button
